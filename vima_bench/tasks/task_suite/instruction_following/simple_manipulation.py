@@ -201,7 +201,7 @@ class SimpleManipulation(BaseTask):
             )
 
         super().__init__(
-            prompt_template="Put the {dragged_obj} into the {base_obj}.",
+            prompt_template="the {base_obj}.",
             task_meta=task_meta,
             placeholder_expression=placeholder_expression,
             oracle_max_steps=oracle_max_steps,
@@ -311,19 +311,19 @@ class SimpleManipulation(BaseTask):
                 dragged_poses.append(dragged_pose)
                 dragged.append((obj_id, (0, None)))
                 # add placeholder objects
-                self.placeholders[
-                    f"dragged_obj_{n_added_dragged_obj + 1}"
-                ] = PlaceholderObj(
-                    name=sampled_dragged_obj.name,
-                    obj_id=obj_id,
-                    urdf=urdf_full_path,
-                    novel_name=sampled_dragged_obj.novel_name,
-                    alias=sampled_dragged_obj.alias,
-                    color=sampled_colors[1][n_added_dragged_obj],
-                    image_size=self._placeholder_img_size,
-                    seed=self.seed,
-                    use_neutral_color=self._use_neutral_color,
-                )
+                #self.placeholders[
+                #    f"dragged_obj_{n_added_dragged_obj + 1}"
+                #] = PlaceholderObj(
+                #    name=sampled_dragged_obj.name,
+                #    obj_id=obj_id,
+                #    urdf=urdf_full_path,
+                #    novel_name=sampled_dragged_obj.novel_name,
+                #    alias=sampled_dragged_obj.alias,
+                #    color=sampled_colors[1][n_added_dragged_obj],
+                #    image_size=self._placeholder_img_size,
+                #    seed=self.seed,
+                #    use_neutral_color=self._use_neutral_color,
+                #)
                 n_added_dragged_obj += 1
             else:
                 print(
@@ -477,7 +477,8 @@ class SimpleManipulation(BaseTask):
         if num_dragged_obj > 1:
             for i in range(1, num_dragged_obj * 2 - 1, 2):
                 dragged_objs_prompt.insert(i, " and")
-        prompt = "".join(["Put the", *dragged_objs_prompt, " into the {base_obj}."])
+        #prompt = "".join(["Put the", *dragged_objs_prompt, " into the {base_obj}."])
+        prompt = "".join(["the {base_obj}."])
         # updates
         self.prompt_template = prompt
 
