@@ -523,7 +523,7 @@ class BaseTask:
         mask = np.int32(cmaps)[0, Ellipsis, 3:].squeeze()
         return cmap, hmap, mask
 
-    def get_random_pose(self, env, obj_size):
+    def get_random_pose(self, env, obj_size, pixel_bounds = None):
         """Get random collision-free object pose within workspace bounds."""
 
         # Get erosion size of object in pixels.
@@ -539,6 +539,9 @@ class BaseTask:
                 free[obj_mask == obj_id] = 0
         free[0, :], free[:, 0], free[-1, :], free[:, -1] = 0, 0, 0, 0
         free = cv2.erode(free, np.ones((erode_size, erode_size), np.uint8))
+        if pixel_bounds is not None:
+            x_min, y_min, x_max, y_max = pixel_bounds
+            free[:y_min, :], free[y_max:, :], free[:, :x_min], free[:, x_max:] = 0, 0, 0, 0
         if np.sum(free) == 0:
             return None, None
         pix = utils.sample_distribution(prob=np.float32(free), rng=self.rng)

@@ -6,8 +6,108 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pybullet as p
 import torch
+from PIL import Image
 from transforms3d import euler
 
+# -----------------------------------------------------------------------------
+# Other utils
+# -----------------------------------------------------------------------------
+def meta_info2objstr(meta_info, object_ids):
+    obj_strs = {}
+    for obj_id in object_ids:
+        obj_strs[obj_id] = str(meta_info['obj_id_to_info'][obj_id]['texture_name']) + ' ' + str(meta_info['obj_id_to_info'][obj_id]['obj_name'])
+    return obj_strs
+
+# -----------------------------------------------------------------------------
+# BBOX UTILS
+# -----------------------------------------------------------------------------
+
+def get_dragged_obj_bbox(segm, view, obj_id):
+    """
+    Get bounding box of object in 2D image view.
+        Use: get_dragged_obj_bbox(obs.get('segm'), view, obj_id)
+    """
+    segm_this_view = segm[view]
+    ys, xs = np.nonzero(segm_this_view == obj_id)
+    xmin, xmax = np.min(xs), np.max(xs)
+    ymin, ymax = np.min(ys), np.max(ys)
+    return (xmin, ymin, xmax, ymax)
+
+def obs2bbox(obs, object_ids):
+    """
+        Get bounding boxes of objects in all views.
+    """
+    segm_dict = obs.pop("segm")
+    views = sorted(segm_dict.keys())
+    bbox_dict = {}
+    for view in views:
+        bbox_dict[view] = {}
+        for obj_id in object_ids:
+            bbox_dict[view][obj_id] = np.asarray(get_dragged_obj_bbox(segm_dict, view, obj_id))
+    return bbox_dict
+
+def draw_bbox(img, bbox, color=(0, 0, 255), thickness=2, text_label=None):
+    """
+    Draw bounding box on image.
+        Input and output are of the form RGB. If channel_first, then channel_first is returned.
+    """
+    xmin, ymin, xmax, ymax = bbox
+    # img is pil image
+    channel_first = False
+    if img.shape[0] == 3:
+        channel_first = True
+        img = np.transpose(img, (1, 2, 0))
+    img = cv2.cvtColor(np.array(img), cv2.COLOR_RGB2BGR)
+    img = cv2.rectangle(img, (xmin, ymin), (xmax, ymax), color, thickness)
+    if text_label is not None:
+        img = cv2.putText(img, text_label, (xmin, ymin), cv2.FONT_HERSHEY_SIMPLEX, 1, color, 1, cv2.LINE_AA)
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    if channel_first:
+        img = np.transpose(img, (2, 0, 1))
+    return img
+
+def change_rgb_h(t_height, rgb):
+    """
+    Change height of image to t_height by padding or reversing the padding.
+    Supports (128, 256) -> (256, 256 and (256, 256) -> (128, 256).
+    Note: change_bbox_h must be used to convert the predicted bbox to the original image.
+    """
+    assert t_height in [256, 128], f"t_height must be 128 or 256, but got {t_height}"
+    channel_first = rgb.shape[0] == 3
+    if channel_first:
+        rgb = np.transpose(rgb, (1, 2, 0))
+
+    h, w, _ = rgb.shape
+    max_dim = max(h, w)
+    if t_height == 256:
+        assert h == 128 and w == 256, f"Found h, w: {h}, {w} but expected 128, 256 for t_height: {t_height}"
+        rgb = Image.fromarray(rgb)
+        image = Image.new("RGB", (max_dim, max_dim), (255, 255, 255))
+        image.paste(rgb, (int((max_dim - w) / 2), int((max_dim - h) / 2)))
+    if t_height == 128:
+        assert h == 256 and w == 256, f"Found h, w: {h}, {w} but expected 256, 256 for t_height: {t_height}"
+        image = rgb[64:192, :]
+
+    if channel_first:
+        image = np.transpose(image, (2, 0, 1))
+
+    return image
+
+def change_bbox_h(t_height, bbox):
+    """
+    Function corresponding to the change_rgb_h function.
+    """
+    assert t_height in [256, 128]
+    if t_height == 256:
+        # the y co-ordinates must be added by 64
+        bbox[1] += 64
+        bbox[3] += 64
+    if t_height == 128:
+        # the y co-ordinates must be subtracted by 64
+        bbox[1] -= 64
+        bbox[3] -= 64
+    print(f"bbox: {bbox}")
+    return bbox
 
 # -----------------------------------------------------------------------------
 # HEIGHTMAP UTILS

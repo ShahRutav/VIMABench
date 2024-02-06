@@ -120,6 +120,8 @@ scene_understanding:
   possible_base_obj_texture: ${color_set_2}
 
 visual_manipulation:
+  dragged_obj_express_types: name
+  base_obj_express_types: name
   possible_dragged_obj: ${dragged_obj}
   possible_base_obj: ${base_obj}
   possible_dragged_obj_texture: ${color_set_1}

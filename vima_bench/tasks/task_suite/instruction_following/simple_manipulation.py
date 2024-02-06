@@ -55,6 +55,7 @@ class SimpleManipulation(BaseTask):
         obs_img_views: str | list[str] | None = None,
         obs_img_size: tuple[int, int] = (128, 256),
         placeholder_img_size: tuple[int, int] = (128, 256),
+        dragged_obj_pixel_bound: tuple[int, int, int, int] = None,
         seed: int | None = None,
         debug: bool = False,
     ):
@@ -215,6 +216,16 @@ class SimpleManipulation(BaseTask):
         self.pos_eps = 0.1
         self._use_neutral_color = use_neutral_color
         self._exclude_distractor_by_geometry = exclude_distractor_by_geometry
+        if dragged_obj_pixel_bound is not None:
+            if isinstance(dragged_obj_pixel_bound, list):
+                assert len(dragged_obj_pixel_bound) == 4, "List must be of length 4"
+                assert all(
+                    isinstance(x, int) for x in dragged_obj_pixel_bound
+                ), "All elements must be integer"
+                dragged_obj_pixel_bound = tuple(dragged_obj_pixel_bound)
+            assert dragged_obj_pixel_bound in [(0, 0, 160, 160), (0, 160, 160, 320)], "Tuple must be either (0, 0, 160, 160) [Left] or (0, 160, 160, 320) [Right]"
+
+        self.dragged_obj_pixel_bound = dragged_obj_pixel_bound
 
     def reset(self, env):
         self._reset_prompt()
@@ -282,7 +293,8 @@ class SimpleManipulation(BaseTask):
                 low=sampled_dragged_obj.size_range.low,
                 high=sampled_dragged_obj.size_range.high,
             )
-            dragged_pose = self.get_random_pose(env, dragged_size)
+            # dragged_pose = self.get_random_pose(env, dragged_size, pixel_bounds=(0, 160, 160, 320))
+            dragged_pose = self.get_random_pose(env, dragged_size, pixel_bounds=self.dragged_obj_pixel_bound)
             # noinspection PyUnboundLocalVariable
             if dragged_size[0] is None or dragged_pose[1] is None:
                 print(

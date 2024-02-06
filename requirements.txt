@@ -1,5 +1,4 @@
 pybullet
-gym==0.21.0
 einops
 dm-tree
 torch

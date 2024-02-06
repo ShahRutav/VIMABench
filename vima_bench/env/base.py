@@ -245,6 +245,15 @@ class VIMAEnvBase(gym.Env):
         """
         return self.prompt, self.prompt_assets
 
+    def get_placeholder2obj_id(self):
+        """
+        Return a mapping from placeholder name to object id. Must be called after reset.
+        """
+        placeholder2obj_id = {}
+        for name, placeholder in self.task.placeholders.items():
+            placeholder2obj_id[name] = placeholder.obj_id
+        return placeholder2obj_id
+
     def reset(self, workspace_only=False):
         """Performs common reset functionality for all supported tasks."""
         if not self.task:
@@ -399,9 +408,9 @@ class VIMAEnvBase(gym.Env):
           (obs, reward, done, info) tuple containing MDP step data.
         """
         if action is not None:
-            assert self.action_space.contains(
-                action
-            ), f"got {action} instead, action space {self.action_space}"
+            # assert self.action_space.contains(
+            #     action
+            # ), f"got {action} instead, action space {self.action_space}"
 
             pose0 = (action["pose0_position"], action["pose0_rotation"])
             pose1 = (action["pose1_position"], action["pose1_rotation"])
@@ -420,6 +429,7 @@ class VIMAEnvBase(gym.Env):
             # Exit early if action times out. We still return an observation
             # so that we don't break the Gym API contract.
             if timeout:
+                print("WARNING: action timed out!")
                 obs = self._get_obs()
                 return obs, 0.0, True, self._get_info()
 
