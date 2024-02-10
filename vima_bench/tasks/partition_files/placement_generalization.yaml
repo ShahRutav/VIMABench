@@ -116,13 +116,10 @@ scene_understanding:
   possible_base_obj_texture: ${color_set_2}
 
 visual_manipulation:
-  dragged_obj_express_types: name
-  base_obj_express_types: name
   possible_dragged_obj: ${dragged_obj}
   possible_base_obj: ${base_obj}
   possible_dragged_obj_texture: ${color_set_1}
   possible_base_obj_texture: ${color_set_2}
-  dragged_obj_pixel_bound: [0, 160, 160, 320]
 
 # ====== novel_concept_grounding ======
 twist:

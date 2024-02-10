@@ -93,6 +93,19 @@ def change_rgb_h(t_height, rgb):
 
     return image
 
+def change_point_h(t_height, point):
+    """
+    Function corresponding to the change_rgb_h function.
+    """
+    assert t_height in [256, 128]
+    if t_height == 256:
+        # the y co-ordinates must be added by 64
+        point[1] += 64
+    if t_height == 128:
+        # the y co-ordinates must be subtracted by 64
+        point[1] -= 64
+    return point
+
 def change_bbox_h(t_height, bbox):
     """
     Function corresponding to the change_rgb_h function.
@@ -106,7 +119,6 @@ def change_bbox_h(t_height, bbox):
         # the y co-ordinates must be subtracted by 64
         bbox[1] -= 64
         bbox[3] -= 64
-    print(f"bbox: {bbox}")
     return bbox
 
 # -----------------------------------------------------------------------------

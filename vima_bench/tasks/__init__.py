@@ -68,12 +68,17 @@ def _load_partition_file(file: str):
 
 # train
 TRAIN_PARTITION = _load_partition_file("train.yaml")
+TRAIN_PARTITION_LANGUAGE = _load_partition_file("train_language.yaml")
 
 # test
 PLACEMENT_GENERALIZATION = _load_partition_file("placement_generalization.yaml")
 COMBINATORIAL_GENERALIZATION = _load_partition_file("combinatorial_generalization.yaml")
 NOVEL_OBJECT_GENERALIZATION = _load_partition_file("novel_object_generalization.yaml")
 NOVEL_TASK_GENERALIZATION = _load_partition_file("novel_task_generalization.yaml")
+PLACEMENT_GENERALIZATION_LANGUAGE = _load_partition_file("placement_generalization_language.yaml")
+COMBINATORIAL_GENERALIZATION_LANGUAGE = _load_partition_file("combinatorial_generalization_language.yaml")
+NOVEL_OBJECT_GENERALIZATION_LANGUAGE = _load_partition_file("novel_object_generalization_language.yaml")
+NOVEL_TASK_GENERALIZATION_LANGUAGE = _load_partition_file("novel_task_generalization_language.yaml")
 
 
 ALL_PARTITIONS = [
@@ -90,5 +95,9 @@ PARTITION_TO_SPECS = {
         "combinatorial_generalization": COMBINATORIAL_GENERALIZATION,
         "novel_object_generalization": NOVEL_OBJECT_GENERALIZATION,
         "novel_task_generalization": NOVEL_TASK_GENERALIZATION,
+        "placement_generalization_l": PLACEMENT_GENERALIZATION_LANGUAGE,
+        "combinatorial_generalization_l": COMBINATORIAL_GENERALIZATION_LANGUAGE,
+        "novel_object_generalization_l": NOVEL_OBJECT_GENERALIZATION_LANGUAGE,
+        "novel_task_generalization_l": NOVEL_TASK_GENERALIZATION_LANGUAGE,
     },
 }
