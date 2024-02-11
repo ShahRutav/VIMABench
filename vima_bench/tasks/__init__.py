@@ -90,6 +90,7 @@ ALL_PARTITIONS = [
 
 PARTITION_TO_SPECS = {
     "train": TRAIN_PARTITION,
+    "train_l": TRAIN_PARTITION_LANGUAGE,
     "test": {
         "placement_generalization": PLACEMENT_GENERALIZATION,
         "combinatorial_generalization": COMBINATORIAL_GENERALIZATION,
