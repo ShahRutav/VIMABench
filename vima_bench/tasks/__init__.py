@@ -86,6 +86,10 @@ ALL_PARTITIONS = [
     "combinatorial_generalization",
     "novel_object_generalization",
     "novel_task_generalization",
+    "placement_generalization_l",
+    "combinatorial_generalization_l",
+    "novel_object_generalization_l",
+    "novel_task_generalization_l",
 ]
 
 PARTITION_TO_SPECS = {
