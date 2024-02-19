@@ -1,8 +1,9 @@
-task_selection: null
+partition_type: train_l
+task_selection: sweep_without_exceeding
 modalities: ["rgb", "segm"]
 num_episodes_per_task: 50000
 success_only: true
-save_path: ???
+save_path: dataset_50k_lang_left_pick
 parallel: true
 seed: 0
 num_save_digits: 6

@@ -15,7 +15,7 @@ import vima_bench
 import vima_bench.utils as U
 from vima_bench import PARTITION_TO_SPECS
 
-MAX_TRIES_PER_SEED = 999
+MAX_TRIES_PER_SEED = 10
 
 
 def _generate_data_for_one_task(
@@ -61,6 +61,7 @@ def _generate_data_for_one_task(
             obs_cache.append(obs)
             elapsed_steps = 0
             meta, prompt, prompt_assets = env.meta_info, env.prompt, env.prompt_assets
+            print(f"Generating data for {task_name} with prompt: {prompt}")
 
             oracle_failed = False
             for _ in range(task.oracle_max_steps):
@@ -153,7 +154,7 @@ def generate_data_for_one_task(kwargs):
 
 @hydra.main(config_path=".", config_name="conf", version_base="1.1")
 def main(cfg):
-    tasks = sorted(list(PARTITION_TO_SPECS["train"].keys()))
+    tasks = sorted(list(PARTITION_TO_SPECS[cfg.partition_type].keys()))
     task_selection = cfg.task_selection
     if task_selection is not None:
         if isinstance(task_selection, str):
@@ -175,7 +176,7 @@ def main(cfg):
                     [
                         dict(
                             task_name=t,
-                            task_kwargs=PARTITION_TO_SPECS["train"][t],
+                            task_kwargs=PARTITION_TO_SPECS[cfg.partition_type][t],
                             modalities=cfg.modalities,
                             num_episodes=cfg.num_episodes_per_task,
                             success_only=cfg.success_only,

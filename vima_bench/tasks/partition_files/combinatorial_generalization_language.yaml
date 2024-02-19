@@ -105,8 +105,12 @@ base_obj:
 
 # ====== constraint_satisfaction ======
 sweep_without_exceeding:
+  swept_obj_express_types: name
+  bounds_express_types: name
+  constraint_express_types: name
   possible_dragged_obj_texture: ${color_set_1}
   possible_base_obj_texture: ${color_set_2}
+  possible_swept_obj_born_area: bottom
 
 # ====== instruction_following ======
 rotate:

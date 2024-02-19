@@ -53,7 +53,9 @@ class WithoutExceeding(SweepObjectsToZoneBase):
         placeholder_img_size: tuple[int, int] = (128, 256),
         seed: int | None = None,
         debug: bool = False,
+        possible_swept_obj_born_area: str = "full",
     ):
+        assert possible_swept_obj_born_area in ["bottom", "top", "full"]
         if constraint_range is None:
             constraint_range = [0.25, 0.6]
         elif isinstance(constraint_range, (tuple, list)):
@@ -89,6 +91,7 @@ class WithoutExceeding(SweepObjectsToZoneBase):
         self.placeholder_expression["det"] = dict(types=["text"])
         self._target_num = None
         self._n_achieved = None
+        self._possible_swept_obj_born_area = possible_swept_obj_born_area
 
     def reset(self, env):
         super().reset(env)
@@ -232,7 +235,16 @@ class WithoutExceeding(SweepObjectsToZoneBase):
         for i in range(self.REJECT_SAMPLING_MAX_TIMES):
             poses = []
             for _ in range(sampled_num_swept_objs):
-                rx = sampled_swept_obj_born_pos[0] + self.rng.random() * 0.18
+                if self._possible_swept_obj_born_area == "full":
+                    rx = sampled_swept_obj_born_pos[0] + self.rng.random() * 0.18
+                elif self._possible_swept_obj_born_area == "bottom":
+                    rx = sampled_swept_obj_born_pos[0] + self.rng.random() * 0.09
+                elif self._possible_swept_obj_born_area == "top":
+                    rx = sampled_swept_obj_born_pos[0] + 0.09 + self.rng.random() * 0.09
+                else:
+                    raise ValueError(
+                        f"Invalid possible_swept_obj_born_area: {self._possible_swept_obj_born_area}"
+                    )
                 ry = sampled_swept_obj_born_pos[1] + self.rng.random() * 0.18
                 xyz = (rx, ry, swept_obj_size[2] / 2)
                 theta = self.rng.random() * 2 * np.pi
