@@ -1,6 +1,7 @@
 from __future__ import annotations
 from typing import Literal
 
+from .utils import stack_sequence_fields, get_batch_size
 from .env import VIMAEnvBase
 from .tasks import ALL_TASKS, ALL_PARTITIONS, PARTITION_TO_SPECS
 from .env.wrappers import PromptRenderer, GUIRecorder
