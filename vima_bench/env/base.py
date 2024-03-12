@@ -13,6 +13,7 @@ from ..tasks import ALL_TASKS as _ALL_TASKS
 from ..tasks.components.end_effectors import Suction, Spatula
 from ..tasks.task_suite.base import BaseTask
 from ..tasks.utils import pybullet_utils, misc_utils as utils
+from ..tasks.components.placeholders.placeholder_text import PlaceholderText
 
 PLACE_STEP = 0.0003
 PLACE_DELTA_THRESHOLD = 0.005
@@ -251,6 +252,8 @@ class VIMAEnvBase(gym.Env):
         """
         placeholder2obj_id = {}
         for name, placeholder in self.task.placeholders.items():
+            if isinstance(placeholder, PlaceholderText):
+                continue
             placeholder2obj_id[name] = placeholder.obj_id
         return placeholder2obj_id
 

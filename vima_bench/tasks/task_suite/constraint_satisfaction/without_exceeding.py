@@ -518,3 +518,6 @@ class WithoutExceeding(SweepObjectsToZoneBase):
             }
 
         return OracleAgent(act)
+
+    def get_placeholder_names_in_order(self):
+        return ["swept_obj", "bounds", "constraint"]

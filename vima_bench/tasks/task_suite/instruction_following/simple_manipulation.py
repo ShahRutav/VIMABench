@@ -546,3 +546,6 @@ class SimpleManipulation(BaseTask):
 
     def is_match(self, pose0, pose1, symmetry):
         return super().is_match(pose0, pose1, symmetry, position_only=True)
+
+    def get_placeholder_names_in_order(self):
+        return ["dragged_obj_1", "base_obj"]

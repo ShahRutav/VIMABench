@@ -69,6 +69,7 @@ def _load_partition_file(file: str):
 # train
 TRAIN_PARTITION = _load_partition_file("train.yaml")
 TRAIN_PARTITION_LANGUAGE = _load_partition_file("train_language.yaml")
+TRAIN_PARTITION_ALL = _load_partition_file("train_all.yaml")
 
 # test
 PLACEMENT_GENERALIZATION = _load_partition_file("placement_generalization.yaml")
@@ -95,6 +96,7 @@ ALL_PARTITIONS = [
 PARTITION_TO_SPECS = {
     "train": TRAIN_PARTITION,
     "train_l": TRAIN_PARTITION_LANGUAGE,
+    "train_all": TRAIN_PARTITION_ALL,
     "test": {
         "placement_generalization": PLACEMENT_GENERALIZATION,
         "combinatorial_generalization": COMBINATORIAL_GENERALIZATION,
